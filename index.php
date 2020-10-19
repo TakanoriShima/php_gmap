@@ -55,49 +55,49 @@
 
     <script>
 
-      function initMap() {
-        //マップ初期表示の位置設定
-        var target = document.getElementById('target');
+        function initMap() {
+            //マップ初期表示の位置設定
+            var target = document.getElementById('target');
+            
+            navigator.geolocation.getCurrentPosition(
+                function(position) {
+                    // 現在地の緯度経度所得
+                    lat = position.coords.latitude;
+                    lng = position.coords.longitude;
+                    
+                    var centerp = {lat: lat, lng: lng};
+                    
+                    //マップ表示
+                    map = new google.maps.Map(target, {
+                        center: centerp,
+                        zoom: 10,
+                    });
+                    
+                    // マーカーの新規出力
+                    new google.maps.Marker({
+                        map: map,
+                        position: centerp,
+                    });
+                }
+            );  
+        }
         
-        navigator.geolocation.getCurrentPosition(
-            function(position) {
-                // 現在地の緯度経度所得
-                lat = position.coords.latitude;
-                lng = position.coords.longitude;
-                
-                var centerp = {lat: lat, lng: lng};
-                
-                //マップ表示
-                map = new google.maps.Map(target, {
-                  center: centerp,
-                  zoom: 10,
-                });
-                
-                // マーカーの新規出力
-                new google.maps.Marker({
-                    map: map,
-                    position: centerp,
-                }) ;
-            }
-        );  
-      }
+        var markerD = [];
         
-      var markerD = [];
-
-      $(function(){
-        $.ajax({
-          type: "POST",
-          url: "all_exams.php",
-          dataType: "json",
-          success: function(data){
-            markerD = data;
-            setMarker(markerD);
-          },
-          error: function(XMLHttpRequest, textStatus, errorThrown){
-            alert('Error : ' + errorThrown);
-          }
+        $(function(){
+            $.ajax({
+                type: "POST",
+                url: "all_exams.php",
+                dataType: "json",
+                success: function(data){
+                    markerD = data;
+                    setMarker(markerD);
+                },
+                error: function(XMLHttpRequest, textStatus, errorThrown){
+                    alert('Error : ' + errorThrown);
+                }
+            });
         });
-      });
 
 
       var marker = [];
@@ -172,57 +172,22 @@
         document.getElementById("sidebar").innerHTML = sidebar_html;
       }
 
-      var openWindow;
-
-      function markerEvent(i) {
-        marker[i].addListener('click', function() {
-          myclick(i);
-        });
-      }
-
-      function myclick(i) {
-        if(openWindow){
-          openWindow.close();
+        var openWindow;
+        
+        function markerEvent(i) {
+            marker[i].addListener('click', function() {
+                myclick(i);
+            });
         }
-        infoWindow[i].open(map, marker[i]);
-        openWindow = infoWindow[i];
-      }
-      
-      function get_lat_lng(address){
-            geocoder = new google.maps.Geocoder();
-            geocoder.geocode({
-              'address':  input_address
-           }, function(results, status) { // 結果
-                if (status === google.maps.GeocoderStatus.OK) { // ステータスがOKの場合
-                  map = new google.maps.Map(document.getElementById('map'), {
-                        center: results[0].geometry.location, // 地図の中心を指定
-                       zoom: 15 // 地図のズームを指定
-                   });
-                 marker = new google.maps.Marker({
-                       position: results[0].geometry.location, // マーカーを立てる位置を指定
-                        map: map // マーカーを立てる地図を指定
-                   });
-                  infoWindow = new google.maps.InfoWindow({ // 吹き出しの追加
-                    content:"<div class='maker'>" + input_address + "</div>" // 吹き出しに表示する内容
-                    });
-                    //marker.addListener('click', function() { // マーカーをクリックしたとき
-                    infoWindow.open(map, marker); // 吹き出しの表示
-                    //});  
-                    var address = document.getElementById("address");
-                    address.value = input_address; 
-                    var latlng = results[0].geometry.location;
-                    var glat = latlng.lat();
-                    var glng = latlng.lng();
-                    var lat = document.getElementById("lat");
-                    var lng = document.getElementById("lng");
-                    lat.value = glat;
-                    lng.value = glng;
-             } else { // 失敗した場合
-                  alert(status);
-              }
-           });
-}
 
+        function myclick(i) {
+            if(openWindow){
+                openWindow.close();
+            }
+                infoWindow[i].open(map, marker[i]);
+                openWindow = infoWindow[i];
+        }
+      
     </script>
 
   </body>
