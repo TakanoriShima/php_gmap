@@ -103,74 +103,67 @@
       var marker = [];
       var infoWindow = [];
 
-      function setMarker(markerData) {
+function setMarker(markerData) {
 
-        //マーカー生成
-        var sidebar_html = "";
-        var icon;
-
-        for (var i = 0; i < markerData.length; i++) {
-
+    //マーカー生成
+    var sidebar_html = "";
+    var icon;
+    
+    for (var i = 0; i < markerData.length; i++) {
+        
         var geocoder = new google.maps.Geocoder();
         geocoder.geocode({'address': markerData[i]['address']}, function(results, status){
             if(status == google.maps.GeocoderStatus.OK) {
                 var lat = results[0].geometry.location.lat();
                 var lng = results[0].geometry.location.lng();
-                 icon = new google.maps.MarkerImage('./list1.png');
-          // マーカーのセット
-          marker[i] = new google.maps.Marker({
-            position:  new google.maps.LatLng({lat: lat, lng: lng}),         // マーカーを立てる位置を指定
-            map: map,                        // マーカーを立てる地図を指定
-             icon: {
-                url: './list1.png',
-                size : new google.maps.Size(19, 25)
-             }
-            
-          });
+                icon = new google.maps.MarkerImage('sopt.png');
+                // マーカーのセット
+                marker[i] = new google.maps.Marker({
+                    position:  new google.maps.LatLng({lat: lat, lng: lng}),         // マーカーを立てる位置を指定
+                    map: map,                        // マーカーを立てる地図を指定
+                    icon: icon
+                });
             }
         });
-    
 
-          
-
-          // マーカー位置セット
-          var markerLatLng = new google.maps.LatLng({
+        // マーカー位置セット
+        var markerLatLng = new google.maps.LatLng({
             lat: lat,
             lng: lng
-          });
-          
-          
-          // マーカーのセット
-          marker[i] = new google.maps.Marker({
+        });
+        
+        
+        // マーカーのセット
+        marker[i] = new google.maps.Marker({
             position: markerLatLng,          // マーカーを立てる位置を指定
             map: map,                        // マーカーを立てる地図を指定
-             icon: {
+            icon: {
                 url: './list1.png',
                 size : new google.maps.Size(19, 25)
-             }
-            
-          });
-          // 吹き出しの追加
-          infoWindow[i] = new google.maps.InfoWindow({
-            content: markerData[i]['year'] + '/' + markerData[i]['month'] + '/' + markerData[i]['day'] + ':　'+ markerData[i]['exam_name'] + '<br><br>' +'<a href="' + markerData[i]['url'] + '" target="_blank">' + markerData[i]['address'] + '</a>'
-          });
-          // サイドバー
-          
-          sidebar_html +=  '● '+ '<a href="javascript:myclick(' + i + ')">' + markerData[i]['exam_name'] + '<\/a><br />';
-          // マーカーにクリックイベントを追加
-          markerEvent(i);
-        }
-
-        // Marker clusterの追加
-        var markerCluster = new MarkerClusterer(
-          map,
-          marker,
-          {imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'}
-        );
-
+            }
+        });
+        
+        // 吹き出しの追加
+        infoWindow[i] = new google.maps.InfoWindow({
+        content: markerData[i]['year'] + '/' + markerData[i]['month'] + '/' + markerData[i]['day'] + ':　'+ markerData[i]['exam_name'] + '<br><br>' +'<a href="' + markerData[i]['url'] + '" target="_blank">' + markerData[i]['address'] + '</a>'
+        });
         // サイドバー
-        document.getElementById("sidebar").innerHTML = sidebar_html;
-      }
+        
+        sidebar_html +=  '● '+ '<a href="javascript:myclick(' + i + ')">' + markerData[i]['exam_name'] + '<\/a><br />';
+        // マーカーにクリックイベントを追加
+        markerEvent(i);
+    }
+    
+    // Marker clusterの追加
+    var markerCluster = new MarkerClusterer(
+    map,
+    marker,
+    {imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'}
+    );
+    
+    // サイドバー
+    document.getElementById("sidebar").innerHTML = sidebar_html;
+}
 
         var openWindow;
         
