@@ -4,6 +4,8 @@ create table exams(
 id int auto_increment primary key,
 exam_name varchar(50) not null,
 address varchar(100) not null,
+lat float not null,
+lng float not null,
 year varchar(4) not null,
 month varchar(2) not null,
 day varchar(2) not null,
@@ -11,6 +13,7 @@ url varchar(300) not null,
 created_at timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-insert into exams(exam_name, address, year, month, day, url) values("応用情報技術者試験", "泉ガーデンギャラリー", "2020", "10", "18", "https://izumigarden.jp/facilities/");
-insert into exams(exam_name, address, year, month, day, url) values("基本情報技術者試験", "ベルサール八重洲", "2020", "10", "18", "https://www.bellesalle.co.jp/shisetsu/tokyo/bs_yaesu/list/");
-insert into exams(exam_name, address, year, month, day, url) values("応用情報技術者試験", "ベルサール八重洲", "2020", "06", "18", "https://www.bellesalle.co.jp/shisetsu/tokyo/bs_yaesu/list/");
+insert into exams(exam_name, address, lat, lng, year, month, day, url) values("応用情報技術者試験", "泉ガーデンギャラリー", 35.66475, 139.740856, "2020", "10", "18", "https://izumigarden.jp/facilities/");
+insert into exams(exam_name, address, lat, lng, year, month, day, url) values("宅地宅建", "船堀", 35.6825543, 139.8636859, "2020", "01", "01", "https://izumigarden.jp/facilities/");
+insert into exams(exam_name, address, lat, lng, year, month, day, url) values("ライフプランナー", "柏駅", 35.8621498, 139.9709172, "2020", "12", "24", "https://izumigarden.jp/facilities/");
+insert into exams(exam_name, address, lat, lng, year, month, day, url) values("司法試験", "東京大学", 35.7126775, 139.761989, "2020", "12", "24", "https://izumigarden.jp/facilities/");

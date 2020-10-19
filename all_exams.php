@@ -20,7 +20,7 @@
     
     $dbh = new PDO($dsn, $db_username, $db_password, $options);
     
-    $sql = "select exam_name, address, year, month, day, url from exams";
+    $sql = "select exam_name, address, lat, lng, year, month, day, url from exams";
     $sth = $dbh -> prepare($sql);
     $sth -> execute();
     
