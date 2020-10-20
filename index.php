@@ -1,41 +1,54 @@
-    <!DOCTYPE html>
-    <html lang="ja">
-        <head>
-            <!-- Required meta tags -->
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-            <!-- Bootstrap CSS -->
-            <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-            <link rel="shortcut icon" href="map.ico">
-            <title>試験会場一覧</title>
-            
-            <style>
-                h1{
-                    color: red;
-                    border: solid 2px red;
-                    border-radius: 30px;
-                    padding: 10px;
-                }
-                #target {
-                    border: 1px outset gray;
-                    width: 950px;
-                    height: 800px;
-                }
-                #sidebar {
-                    border: 1px solid #666;
-                    padding: 6px;
-                    background-color: white;
-                    font-family: Meriyo UI;
-                    font-size: 12px;
-                    overflow: auto;
-                    width: 237px;
-                    height: 786px;
-                }
-                .icon{
-                    width: 200px;
-                }
-            </style>
-        </head>
+<?php
+    session_start();
+    $keyword = "";
+    if($_SESSION["keyword"] !== ""){
+        $keyword = $_SESSION["keyword"];
+    }else{
+        $keyword = '';
+    }
+    if($keyword === 'undefined'){
+        $keyword = "";
+        session_destroy();
+    }
+?>
+<!DOCTYPE html>
+<html lang="ja">
+    <head>
+        <!-- Required meta tags -->
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+        <link rel="shortcut icon" href="map.ico">
+        <title>試験会場一覧</title>
+        
+        <style>
+            h1{
+                color: red;
+                border: solid 2px red;
+                border-radius: 30px;
+                padding: 10px;
+            }
+            #target {
+                border: 1px outset gray;
+                width: 950px;
+                height: 800px;
+            }
+            #sidebar {
+                border: 1px solid #666;
+                padding: 6px;
+                background-color: white;
+                font-family: Meriyo UI;
+                font-size: 12px;
+                overflow: auto;
+                width: 237px;
+                height: 786px;
+            }
+            .icon{
+                width: 200px;
+            }
+        </style>
+    </head>
     <body>
         <div class="container">
             <div class="row">
@@ -47,6 +60,22 @@
                 </div>
             </div>
             <div class="row mt-3">
+                <form class="col-sm-12">
+                    <div class="form-group row">
+                        <label class="col-2 col-form-label">試験名</label>
+                        <div class="col-sm-10">
+                            <input type="search" id="keyword" value="<?php print $keyword; ?>" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="offset-sm-2 col-sm-4">
+                            <button type="submit" id="search" class="btn btn-primary form-control">検索</button>
+                        </div>
+                        <div class="offset-sm-2 col-sm-2">
+                            <button type="reset" id="reset" class="btn btn-danger form-control">リセット</button>
+                        </div>
+                    </div>
+                </form>
                 <table class="col-sm-12 table">
                     <tr>
                         <td><div id="target"></div></td>
@@ -103,20 +132,79 @@
             
          
             $(function(){
+                var fd = new FormData();
+                var keyword = $("#keyword").val();
+                fd.append('keyword', keyword);
+                
                 $.ajax({
                     type: "POST",
-                    url: "all_exams.php",
+                    url: "get_exams.php",
                     dataType: "json",
-                    success: function(data){
-                        markerD = data;
-                        setMarker(markerD);
-                    },
-                    error: function(XMLHttpRequest, textStatus, errorThrown){
-                        alert('Error : ' + errorThrown);
-                    }
+                    data: fd,
+                    processData: false,
+                    contentType: false
+                })
+                .done(function( data, textStatus, jqXHR ) {
+                    // 送信成功
+                    markerD = data;
+                    setMarker(markerD);
+                })
+                .fail(function( jqXHR, textStatus, errorThrown ) {
+                    // 送信失敗
                 });
             });
     
+             $('#search').click(function(){
+                var fd = new FormData();
+                var keyword = $("#keyword").val();
+                fd.append('keyword', keyword);
+                
+                $.ajax({
+                    type: "POST",
+                    url: "get_exams.php",
+                    dataType: "json",
+                    data: fd,
+                    processData: false,
+                    contentType: false
+                })
+                .done(function( data, textStatus, jqXHR ) {
+                    // 送信成功
+                    markerD = data;
+                    setMarker(markerD);
+                })
+                .fail(function( jqXHR, textStatus, errorThrown ) {
+                    // 送信失敗
+                });
+                 
+             });
+             
+             $('#reset').click(function(){
+                 
+                var fd = new FormData();
+                var keyword = "";
+                
+                fd.append('keyword', keyword);
+                
+                $.ajax({
+                    type: "POST",
+                    url: "get_exams.php",
+                    dataType: "json",
+                    data: fd,
+                    processData: false,
+                    contentType: false
+                })
+                .done(function( data, textStatus, jqXHR ) {
+                    // 送信成功
+                    markerD = data;
+                    setMarker(markerD);
+                    $("#keyword").val("");
+                })
+                .fail(function( jqXHR, textStatus, errorThrown ) {
+                    // 送信失敗
+                });
+                 
+             });
+
 
             function setMarker(markerData) {
             

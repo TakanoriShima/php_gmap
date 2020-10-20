@@ -2,6 +2,15 @@
 
     //ヘッダー情報の設定
     header("Content-Type: application/json; charset=utf-8");
+    session_start();
+
+    $keyword = $_POST['keyword'];
+    if($keyword !== ""){
+        $_SESSION['keyword'] = $keyword;
+    }else{
+        $_SESSION['keyword'] = "";
+    }
+    
     
     $data = array();
     
@@ -21,7 +30,17 @@
     $dbh = new PDO($dsn, $db_username, $db_password, $options);
     
     $sql = "select exam_name, address, lat, lng, year, month, day, url from exams";
-    $sth = $dbh -> prepare($sql);
+    
+    if($_SESSION['keyword'] !== ""){
+        $sql .= " where exam_name = :exam_name";
+        $sth = $dbh -> prepare($sql);
+        $keyword = $_SESSION['keyword'];
+        $sth->bindParam(':exam_name', $keyword, PDO::PARAM_STR);
+        
+    }else{
+        $sth = $dbh -> prepare($sql);  
+    }
+    
     $sth -> execute();
     
     //データを取得する
